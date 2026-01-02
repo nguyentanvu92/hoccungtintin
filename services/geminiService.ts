@@ -1,23 +1,22 @@
-import { Question, Subject, Difficulty, QuestionType } from '../types';
+import { Question, Subject, Difficulty, QuestionType } from "../types";
 
-export async function generateQuestion(
-  subject: Subject,
-  difficulty: Difficulty,
-  type: QuestionType
-): Promise<Question> {
-  const res = await fetch('/api/gemini', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      subject,
-      difficulty,
-      type,
-    }),
+export async function generateQuestions(params: {
+  subject: Subject;
+  difficulty: Difficulty;
+  type: QuestionType;
+  count: number;
+}): Promise<Question[]> {
+  const res = await fetch("/api/gemini", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(params)
   });
 
   if (!res.ok) {
-    throw new Error('Gemini API failed');
+    throw new Error("Failed to generate questions");
   }
 
-  return await res.json();
+  return res.json();
 }
