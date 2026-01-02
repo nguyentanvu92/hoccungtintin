@@ -12,6 +12,27 @@ interface Props {
 }
 
 const ExerciseCard: React.FC<Props> = ({ subject, topic, difficulty, onScoreUpdate, onLevelComplete, onReturnHome }) => {
+  const fetchQuestions = async () => {
+  try {
+    const res = await fetch("/api/generateQuestions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        topic: props.topic?.name || "Hóa học",
+        difficulty: "Trung bình"
+      })
+    });
+
+    const data = await res.json();
+    console.log("Kết quả từ API:", data.text);
+
+  } catch (error) {
+    console.error("Lỗi gọi API:", error);
+  }
+};
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
