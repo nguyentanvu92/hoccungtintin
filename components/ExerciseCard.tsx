@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Subject, Topic, Question, Difficulty, QuestionType } from '../types';
-import { generateQuestions, getTutorFeedback, generateImageForQuestion } from '../services/geminiService';
 
 interface Props {
   subject: Subject;
