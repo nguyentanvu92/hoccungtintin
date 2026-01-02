@@ -1,43 +1,35 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenAI } from '@google/genai';
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!,
+  apiKey: process.env.GEMINI_API_KEY!
 });
 
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { prompt, history, systemPrompt } = req.body;
+    const { subject, difficulty, type, count } = req.body;
 
-    const contents = [
-      ...(history || []).map((m: any) => ({
-        role: m.role === 'user' ? 'user' : 'model',
-        parts: [{ text: m.text }],
-      })),
-      { role: 'user', parts: [{ text: prompt }] },
-    ];
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const result = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents,
-      config: {
-        systemInstruction: systemPrompt,
-        temperature: 0.3,
-      },
-    });
+    const prompt = `
+Tạo ${count} câu hỏi môn ${subject}
+Mức độ: ${difficulty}
+Loại: ${type}
+Trả về JSON hợp lệ.
+`;
 
-    res.status(200).json({
-      text: result.text || 'Ba Vũ đang suy nghĩ tiếp 🪄',
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Gemini API failed' });
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
+
+    res.status(200).json(JSON.parse(text));
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
   }
 }
