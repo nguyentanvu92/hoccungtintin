@@ -1,0 +1,7 @@
+{
+  "name": "Học cùng Tin Tin! ",
+  "description": "Một ứng dụng giáo dục sinh động giúp học sinh lớp 1 ôn tập kiến thức môn Toán và Tiếng Việt thông qua các bài tập tương tác và trợ lý ảo thông minh.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
