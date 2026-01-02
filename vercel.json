@@ -1,4 +1,14 @@
 {
-  "buildCommand": null,
-  "outputDirectory": "."
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/assets/(.*)\\.js",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
