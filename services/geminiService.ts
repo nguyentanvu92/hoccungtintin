@@ -1,25 +1,23 @@
-type ChatMsg = {
-  role: 'user' | 'tutor';
-  text: string;
-};
+import { Question, Subject, Difficulty, QuestionType } from '../types';
 
-export async function askTutor(
-  prompt: string,
-  history: ChatMsg[]
-): Promise<string> {
+export async function generateQuestion(
+  subject: Subject,
+  difficulty: Difficulty,
+  type: QuestionType
+): Promise<Question> {
   const res = await fetch('/api/gemini', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      prompt,
-      history,
+      subject,
+      difficulty,
+      type,
     }),
   });
 
   if (!res.ok) {
-    throw new Error('Tutor API failed');
+    throw new Error('Gemini API failed');
   }
 
-  const data = await res.json();
-  return data.text;
+  return await res.json();
 }
