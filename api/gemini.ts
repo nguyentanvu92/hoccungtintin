@@ -1,9 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export default async function handler(
   req: VercelRequest,
@@ -16,7 +14,9 @@ export default async function handler(
   try {
     const { subject, difficulty, type, count } = req.body;
 
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash"
+    });
 
     const prompt = `
 Tạo ${count} câu hỏi môn ${subject}
@@ -28,7 +28,7 @@ Trả về JSON hợp lệ.
     const result = await model.generateContent(prompt);
     const text = result.response.text();
 
-    res.status(200).json(JSON.parse(text));
+    res.status(200).json({ text });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
