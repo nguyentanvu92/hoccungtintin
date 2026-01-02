@@ -1,12 +1,18 @@
-import { GoogleGenerativeAI } from "@google/genai";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+) {
   try {
     const { topic, difficulty } = req.body;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash"
+    });
 
     const prompt = `
 Tạo 5 câu hỏi trắc nghiệm
